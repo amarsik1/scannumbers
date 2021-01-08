@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "db-up": "cd _Database & db-migrate up --config ./config/prod.json",
-    "db-down": "cd _Database & db-migrate down --config ./config/prod.json",
+    "db-up": "db-migrate up --config ./config/prod.json",
+    "db-down": "db-migrate down --config ./config/prod.json",
     "start": "node index",
     "dev": "nodemon index",
-    "dev-db-up": "cd _Database & db-migrate up --config ./config/dev.json",
-    "dev-db-down": "cd _Database & db-migrate down --config ./config/dev.json"
+    "dev-db-up": "db-migrate up --config ./config/dev.json",
+    "dev-db-down": "db-migrate down --config ./config/dev.json"
   },
   "keywords": [],
   "author": "",
