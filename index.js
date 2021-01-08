@@ -6,7 +6,7 @@ const app = express();
 app.use(bodyParser.json());
 const PORT = process.env.PORT || 3012;
 
-app.use(cors);
+app.use(cors(app));
 
 require('./config/routes')(app);
 
