@@ -1,0 +1,12 @@
+{
+  "dev": {
+    "user": "postgres",
+    "password": "amarsik",
+    "database": "meters",
+    "host": "localhost",
+    "port": "5432",
+    "driver": "pg",
+    "multipleStatements": true
+  },
+  "sql-file": true
+}
