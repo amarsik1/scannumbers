@@ -1,3 +1,5 @@
+/* Replace with your SQL commands */
+DROP TABLE indication;
 DROP TABLE meter;
 DROP TABLE meters_group;
 DROP TABLE consumer;
