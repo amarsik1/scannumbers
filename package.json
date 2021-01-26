@@ -7,7 +7,7 @@
     "db-up": "db-migrate up --config ./config/prod.json",
     "db-down": "db-migrate down --config ./config/prod.json",
     "start": "node index",
-    "dev": "nodemon index",
+    "dev": "nodemon index dev" ,
     "dev-db-up": "db-migrate up --config ./config/dev.json",
     "dev-db-down": "db-migrate down --config ./config/dev.json"
   },
