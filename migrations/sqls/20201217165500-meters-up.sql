@@ -29,7 +29,9 @@ create table consumer (
   consumer_id serial PRIMARY KEY,
   name varchar not null,
   surname varchar not null,
-  patronymic varchar not null
+  patronymic varchar not null,
+  email varchar unique not null,
+  password varchar not null
 );
 
 create table meters_group (
