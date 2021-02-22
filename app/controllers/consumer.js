@@ -1,5 +1,5 @@
 const pool = require('../../config/db'),
-    {validateUser, generateAuthToken} = require('../models/consumer.model'),
+    {validateUser, generateAuthToken, getIdFromToken} = require('../models/consumer.model'),
     bCrypt = require('bcrypt');
 
 const create = async (req, res) => {
@@ -73,8 +73,67 @@ const login = async (req, res) => {
     }
 };
 
+const findOne = async (req, res) => {
+
+    const {id} = req.params;
+
+    if (isNaN(+id) && !!id) res.status(400).send('Invalid value');
+
+    if (!await isExist(id)) return res.status(400).send('User does not exists');
+
+    const user = await pool.query('select * from consumer where consumer_id = $1', [id]);
+    const inDbUser = user.rows[0];
+
+    res.status(200).send({
+        consumer_id: inDbUser.consumer_id,
+        name: inDbUser.name,
+        surname: inDbUser.surname,
+        patronymic: inDbUser.patronymic,
+        email: inDbUser.email,
+    });
+};
+
+const deleteOne = async (req, res) => {
+    const {id} = req.params;
+
+    if (!await isExist(id)) return res.status(400).send('User does not exists');
+
+    await pool.query('delete from consumer where consumer_id = $1', [id]);
+
+    res.status(200).send('Successfully deleted');
+};
+
+const getAllInfoFromMeters = async (req, res) => {
+    const token = req.get('Authorization');
+    const id = getIdFromToken(token);
+
+    const response = await pool.query('select * from meters_group where consumer_id = $1', [id]);
+    const metersGroup = response.rows;
+
+    // on this rows killed three hours
+    // TODO: remove for
+    for (let i = 0; i < metersGroup.length; i++) {
+        const group = metersGroup[i];
+        const response = await pool.query('select * from meter where meters_group_id = $1', [group.meters_group_id]);
+        const meters = response.rows;
+        console.log()
+        for (let j = 0; j < meters.length; j++) {
+            const meter = meters[j];
+            const allMeterData = await pool.query("SELECT * FROM meter_data where meter_id = $1", [meter.meter_id]);
+            meters[j].meterData = allMeterData.rows;
+        }
+        metersGroup[i].meters = meters;
+    }
+
+
+    res.status(200).json(metersGroup);
+};
+
 module.exports = {
     create,
     login,
-    isExist
+    isExist,
+    findOne,
+    deleteOne,
+    getAllInfoFromMeters
 };

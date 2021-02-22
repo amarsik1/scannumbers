@@ -9,11 +9,10 @@ app.use(cors());
 
 require('./config/routes')(app);
 
-
 app.get('/', (req, res) => {
     res.send("express application");
 });
 
 app.listen(PORT, () => {
-    console.log("app is started in " + PORT + " port");
+    console.log(`app is started in ${PORT} port`);
 });

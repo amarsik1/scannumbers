@@ -1,10 +1,6 @@
-create table address (
-  address_id serial PRIMARY KEY,
-  street_type_id integer not null ,
-  street_name varchar not null ,
-  house_number varchar not null ,
-  apartment_number varchar default 0,
-  CONSTRAINT address_unique UNIQUE (street_name, house_number, apartment_number)
+create table resource_type (
+  resource_type_id serial  PRIMARY KEY,
+  name varchar not null
 );
 
 create table street_type (
@@ -12,18 +8,27 @@ create table street_type (
   name varchar not null
 );
 
+create table address (
+  address_id serial PRIMARY KEY,
+  street_type_id integer not null ,
+  street_name varchar not null ,
+  house_number varchar not null ,
+  apartment_number varchar default 0,
+  CONSTRAINT address_unique UNIQUE (street_name, house_number, apartment_number),
+  FOREIGN KEY (street_type_id) REFERENCES street_type (street_type_id)
+);
+
+
 create table organization (
   organization_id serial PRIMARY KEY,
   name varchar not null,
   resource_type_id integer not null,
   address_id integer not null,
-  edrpou integer not null UNIQUE
+  edrpou integer not null UNIQUE,
+  FOREIGN KEY (address_id) REFERENCES address (address_id),
+  FOREIGN KEY (resource_type_id) REFERENCES resource_type (resource_type_id)
 );
 
-create table resource_type (
-  resource_type_id serial  PRIMARY KEY,
-  name varchar not null
-);
 
 create table consumer (
   consumer_id serial PRIMARY KEY,
@@ -38,7 +43,11 @@ create table meters_group (
   meters_group_id serial  PRIMARY KEY,
   name varchar not null,
   consumer_id integer not null,
-  address_id integer not null unique
+  address_id integer not null unique,
+  FOREIGN KEY (address_id) REFERENCES address (address_id),
+  FOREIGN KEY (consumer_id)
+    REFERENCES consumer (consumer_id)
+    ON DELETE CASCADE
 );
 
 create table meter (
@@ -47,42 +56,19 @@ create table meter (
   resource_type_id integer not null,
   organization_id integer not null,
   meters_group_id integer not null,
-    CONSTRAINT meter_unique UNIQUE (resource_type_id, organization_id, meters_group_id)
+    CONSTRAINT meter_unique UNIQUE (resource_type_id, organization_id, meters_group_id),
+    FOREIGN KEY (meters_group_id) REFERENCES meters_group (meters_group_id) ON DELETE CASCADE,
+    FOREIGN KEY (organization_id) REFERENCES organization (organization_id),
+    FOREIGN KEY (resource_type_id) REFERENCES resource_type (resource_type_id)
 );
 
 create TABLE meter_data (
   meter_data_id serial PRIMARY KEY,
   meter_id INTEGER NOT NULL,
   value INTEGER NOT NULL,
-  date TIMESTAMP NOT NULL
+  date TIMESTAMP NOT NULL,
+  FOREIGN KEY (meter_id) REFERENCES meter (meter_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
-
--- ---
--- Foreign Keys
--- ---
-
-alter table address add FOREIGN KEY (street_type_id) REFERENCES street_type (street_type_id);
-alter table organization add FOREIGN KEY (resource_type_id) REFERENCES resource_type (resource_type_id);
-alter table organization add FOREIGN KEY (address_id) REFERENCES address (address_id);
-alter table meters_group add FOREIGN KEY (consumer_id) REFERENCES consumer (consumer_id);
-alter table meters_group add FOREIGN KEY (address_id) REFERENCES address (address_id);
-alter table meter add FOREIGN KEY (resource_type_id) REFERENCES resource_type (resource_type_id);
-alter table meter add FOREIGN KEY (organization_id) REFERENCES organization (organization_id);
-alter table meter add FOREIGN KEY (meters_group_id) REFERENCES meters_group (meters_group_id);
-alter table meter_data add FOREIGN KEY (meter_id) REFERENCES meter (meter_id);
-
--- ---
--- Table Properties
--- ---
-
--- ALTER TABLE address ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE streetType ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE organization ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE resourceType ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE consumer ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE metersGroup ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE meter ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
 
  insert into street_type (name) values
  ('square'),

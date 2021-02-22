@@ -23,7 +23,8 @@ const create = async (req, res) => {
 
         if (error) return res.status(400).send(error.details[0].message);
 
-        if (!!isValueExist(req.body).rows.length) return res.status(400).send('Meter with this value already exists');
+        const meterInDb = await isValueExist(req.body);
+        if (!!meterInDb.length) return res.status(400).send('Meter with this value already exists');
         const {personal_account, resource_type_id, organization_id, meters_group_id} = req.body;
 
         if (!await metersGroupIsExist(meters_group_id)) return res.status(400).send('Meter group does not exists');
@@ -58,8 +59,19 @@ const update = async (req, res) => {
     res.status(200).send("Meters group was successfully updated");
 };
 
+const deleteOne = async (req, res) => {
+    const {id} = req.params;
+
+    if (!await isExist(id)) return res.status(400).send('Meter does not exists');
+    await pool.query('delete from meter where meter_id = $1', [id]);
+
+    res.status(200).send('Successfully deleted');
+
+};
+
 module.exports = {
     isExist,
     create,
-    update
+    update,
+    deleteOne
 };

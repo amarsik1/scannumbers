@@ -9,7 +9,7 @@ const getMeters = async (req, res) => {
 
     const meters = await pool.query('select * from meter where meters_group_id = $1', [id]);
 
-    if (!!!meters.rows.length) return res.status(200).send("There are no meters in this group");
+    if (!!!meters.rows.length) return res.status(400).send("There are no meters in this group");
 
     res.status(200).send(meters.rows)
 };
@@ -23,14 +23,16 @@ const isValueExist = async (metersGroup) => {
     const {consumer_id, address_id} = metersGroup;
     const meterGroup = await pool.query("SELECT * FROM meters_group where consumer_id = $1 and address_id = $2",
         [consumer_id, address_id]);
-    return !!meterGroup.rows
+    const meterGroupAddress = await pool.query("SELECT * FROM meters_group where address_id = $1",
+        [address_id]);
+    return !!meterGroup.rows[0] || !!meterGroupAddress.rows[0]
 };
 
 const create = async (req, res) => {
     const {error} = validateMetersGroup(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    if (await isValueExist(req.body).length) return res.status(400).send('Meters group with this value already exists');
+    if (await isValueExist(req.body)) return res.status(400).send('Meters group with this value already exists');
     const {name, consumer_id, address_id} = req.body;
 
     if (!await consumerIsExist(consumer_id)) return res.status(400).send('Consumer does not exists');
@@ -62,9 +64,20 @@ const update = async (req, res) => {
     res.status(200).send("Meters group was successfully updated");
 };
 
+const deleteOne = async (req, res) => {
+    const {id} = req.params;
+
+    if (!await isExist(id)) return res.status(400).send('Meters group does not exists');
+    await pool.query('delete from meters_group where meters_group_id = $1', [id]);
+
+    res.status(200).send('Successfully deleted');
+};
+
+
 module.exports = {
     getMeters,
     isExist,
     create,
-    update
+    update,
+    deleteOne
 };

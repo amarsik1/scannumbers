@@ -2,7 +2,7 @@ const Joi = require('joi'),
     {jwtSecret} = require('../../config/app'),
     jwt = require('jsonwebtoken');
 
-function validateUser(user) {
+const validateUser = user => {
     const schema = Joi.object({
         name: Joi.string().min(2).max(50).required(),
         surname: Joi.string().min(2).max(50).required(),
@@ -13,7 +13,7 @@ function validateUser(user) {
     return schema.validate(user);
 }
 
-const generateAuthToken = function (id) {
+const generateAuthToken = id => {
     return jwt.sign(
         {
             _id: id,
@@ -21,7 +21,13 @@ const generateAuthToken = function (id) {
     );
 };
 
+const getIdFromToken = token => {
+    const decoded = jwt.verify(token, jwtSecret);
+    return decoded._id
+};
+
 module.exports = {
     validateUser,
-    generateAuthToken
+    generateAuthToken,
+    getIdFromToken
 };
