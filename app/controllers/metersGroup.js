@@ -32,15 +32,15 @@ const update = async (req, res) => {
     const {error} = validateMetersGroup(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    const {id, consumer_id, address_id} = req.body;
+    const {meters_group_id, consumer_id, address_id} = req.body;
 
-    if (!await meterGroupService.isExist(id)) return res.status(400).send('Meters group does not exists');
+    if (!await meterGroupService.isExist(meters_group_id)) return res.status(400).send('Meters group does not exists');
 
     if (!await consumerService.isExist(consumer_id)) return res.status(400).send('Consumer does not exists');
     if (!await addressService.isExist(address_id)) return res.status(400).send('Address does not exists');
 
     if (await meterGroupService.isValueExist(req.body).length)
-        if (await meterGroupService.isValueExist(req.body).meters_group_id !== id) return res.status(400).send('Meters group with this value already exists');
+        if (await meterGroupService.isValueExist(req.body).meters_group_id !== meters_group_id) return res.status(400).send('Meters group with this value already exists');
 
     await meterGroupService.update(req.body);
 

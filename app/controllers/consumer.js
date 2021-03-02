@@ -1,6 +1,9 @@
 const {validateUser, generateAuthToken, getIdFromToken} = require('../models/consumer.model'),
     bCrypt = require('bcrypt');
 const consumerService = require('../service/consumer.service');
+const meterGroupService = require('../service/meterGroup.service');
+const meterService = require('../service/meter.service');
+const meterDataService = require('../service/meterData.service');
 
 const create = async (req, res) => {
     const {error} = validateUser(req.body);
@@ -62,7 +65,7 @@ const findOne = async (req, res) => {
     if (isNaN(+id) && !!id) res.status(400).send('Invalid value');
     if (!await consumerService.isExist(id)) return res.status(400).send('User does not exists');
 
-    const inDbUser = consumerService.findOne(id);
+    const inDbUser = consumerService.findById(id);
 
     res.status(200).send({
         consumer_id: inDbUser.consumer_id,
@@ -86,26 +89,21 @@ const getAllInfoFromMeters = async (req, res) => {
     const token = req.get('Authorization');
     const id = getIdFromToken(token);
 
-    const response = await pool.query('select * from meters_group where consumer_id = $1', [id]);
-    const metersGroup = response.rows;
+    const groups = await meterGroupService.getGroupsByUserId(id);
 
-    // on this rows killed three hours
-    // TODO: remove for
-    for (let i = 0; i < metersGroup.length; i++) {
-        const group = metersGroup[i];
-        const response = await pool.query('select * from meter where meters_group_id = $1', [group.meters_group_id]);
+    for (let i = 0; i < groups.length; i++) {
+        const group = groups[i];
+        const response = await meterService.getMetersByGroupId(group.meters_group_id);
         const meters = response.rows;
-        console.log()
         for (let j = 0; j < meters.length; j++) {
             const meter = meters[j];
-            const allMeterData = await pool.query("SELECT * FROM meter_data where meter_id = $1", [meter.meter_id]);
+            const allMeterData = meterDataService.getFromOne(meter.meter_id);
             meters[j].meterData = allMeterData.rows;
         }
-        metersGroup[i].meters = meters;
+        groups[i].meters = meters;
     }
 
-
-    res.status(200).json(metersGroup);
+    res.status(200).json(groups);
 };
 
 module.exports = {

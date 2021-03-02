@@ -32,8 +32,8 @@ const update = async (req, res) => {
     const {error} = validateAddress(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    const {id} = req.body;
-    if (!await addressService.isExist(id)) return res.status(400).send('Address does not exists');
+    const {address_id} = req.body;
+    if (!await addressService.isExist(address_id)) return res.status(400).send('Address does not exists');
     if (await addressService.isValueExist(req.body)) return res.status(400).send('Address with this value already exists');
 
     await addressService.update(req.body);

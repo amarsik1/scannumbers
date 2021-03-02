@@ -27,6 +27,11 @@ const update = async (group) => {
         [name, consumer_id, address_id, id]);
 };
 
+const getGroupsByUserId = async (id) => {
+    const groups = await pool.query('select * from meters_group where consumer_id = $1', [id]);
+    return groups.rows;
+};
+
 const deleteOne = async (id) => {
     await pool.query('delete from meters_group where meters_group_id = $1', [id]);
 
@@ -35,6 +40,7 @@ const deleteOne = async (id) => {
 module.exports = {
     isExist,
     isValueExist,
+    getGroupsByUserId,
     create,
     update,
     deleteOne
