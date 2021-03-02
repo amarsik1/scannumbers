@@ -1,5 +1,5 @@
 const {validateAddress} = require('../models/address.model');
-const addressService = require('../servise/address.service');
+const addressService = require('../service/address.service');
 
 const getOnce = async (req, res) => {
     const {id} = req.params;

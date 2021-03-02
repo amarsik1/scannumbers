@@ -1,7 +1,7 @@
 const {validateMeter} = require('../models/meter.model');
-const metersGroupService = require('../servise/metersGroup.service');
-const organizationService = require('../servise/organization.service');
-const meterService = require('../servise/meter.service');
+const metersGroupService = require('../service/metersGroup.service');
+const organizationService = require('../service/organization.service');
+const meterService = require('../service/meter.service');
 
 const create = async (req, res) => {
     const {error} = validateMeter(req.body);

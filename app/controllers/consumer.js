@@ -1,6 +1,6 @@
 const {validateUser, generateAuthToken, getIdFromToken} = require('../models/consumer.model'),
     bCrypt = require('bcrypt');
-const consumerService = require('../servise/consumer.service');
+const consumerService = require('../service/consumer.service');
 
 const create = async (req, res) => {
     const {error} = validateUser(req.body);
