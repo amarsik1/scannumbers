@@ -21,6 +21,11 @@ const create = async (meter) => {
     return newMeter.rows[0];
 };
 
+const getMetersByGroupId = async (id) => {
+    const meters = await pool.query('select * from meter where meters_group_id = $1', [id]);
+    return meters.rows;
+};
+
 const update = async (meter) => {
     const {id, personal_account, resource_type_id, organization_id, meters_group_id} = meter;
     await pool.query("UPDATE meter SET personal_account = $1, resource_type_id = $2, organization_id = $3, meters_group_id = $4 where meter_id = $5",
@@ -33,6 +38,7 @@ const deleteOne = async (id) => {
 
 module.exports = meterServise = {
     isExist,
+    getMetersByGroupId,
     isValueExist,
     create,
     update,

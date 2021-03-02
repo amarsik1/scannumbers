@@ -22,7 +22,6 @@ const findByEmail = async (email) => {
 
 const deleteOne = async (id) => {
     await pool.query('delete from consumer where consumer_id = $1', [id]);
-
 };
 
 module.exports = consumerService = {
