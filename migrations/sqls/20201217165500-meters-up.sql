@@ -12,9 +12,10 @@ create table address (
   address_id serial PRIMARY KEY,
   street_type_id integer not null ,
   street_name varchar not null ,
+  city varchar not null ,
   house_number varchar not null ,
   apartment_number varchar default 0,
-  CONSTRAINT address_unique UNIQUE (street_name, house_number, apartment_number),
+  CONSTRAINT address_unique UNIQUE (city, street_name, house_number, apartment_number),
   FOREIGN KEY (street_type_id) REFERENCES street_type (street_type_id)
 );
 
@@ -36,6 +37,7 @@ create table consumer (
   surname varchar not null,
   patronymic varchar not null,
   email varchar unique not null,
+  pro boolean not null default FALSE,
   password varchar not null
 );
 
@@ -53,6 +55,7 @@ create table meters_group (
 create table meter (
   meter_id serial PRIMARY KEY,
   personal_account varchar not null,
+  name varchar not null,
   resource_type_id integer not null,
   organization_id integer not null,
   meters_group_id integer not null,
