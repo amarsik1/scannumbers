@@ -15,7 +15,7 @@ const create = async (req, res) => {
     if (!await metersGroupService.isExist(meters_group_id)) return res.status(400).send('Meter group does not exists');
     if (!await organizationService.isExist(organization_id)) return res.status(400).send('Organization does not exists');
 
-    const newMeter = meterService.create(req.body)
+    const newMeter = await meterService.create(req.body)
 
     res.status(200).send(newMeter);
 };

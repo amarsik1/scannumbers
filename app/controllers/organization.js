@@ -8,13 +8,13 @@ const create = async (req, res) => {
 
     const {address_id, edrpou} = req.body;
 
-    const organizationInDb = organizationService.getOneByEDRPOU(edrpou);
+    const organizationInDb = await organizationService.getOneByEDRPOU(edrpou);
     if (!!organizationInDb) return res.status(400).send('Organization with this edrpou already exists');
 
     if (await organizationService.isValueExist(req.body)) return res.status(400).send('Organization with this value already exists');
     if (!await addressService.isExist(address_id)) return res.status(400).send('Address does not exists');
 
-    const newOrganization = organizationService.create(req.body);
+    const newOrganization = await organizationService.create(req.body);
 
     res.status(200).send(newOrganization);
 };
@@ -25,7 +25,7 @@ const getOne = async (req, res) => {
     if (isNaN(id)) return res.status(400).send('Invalid value organization_id');
 
     if (!await organizationService.isExist(id)) return res.status(400).send('Organization does not exists');
-    const organization = organizationService.getOne(id);
+    const organization = await organizationService.getOne(id);
 
     res.status(200).send(organization);
 };
@@ -34,7 +34,7 @@ const getOrganizationByResourceId = async (req, res) => {
     const id = parseInt(req.query.resourceType);
 
     if (id > 5 || id < 1) return res.status(400).send('Invalid value');
-    const organizations = organizationService.getOrganizationByResourceId(id);
+    const organizations = await organizationService.getOrganizationByResourceId(id);
 
     res.status(200).send(organizations);
 };

@@ -11,12 +11,12 @@ const create = async (req, res) => {
 
     const {body} = req;
 
-    const inDbUser = consumerService.findByEmail(body.email)
+    const inDbUser = await consumerService.findByEmail(body.email)
     if (inDbUser) return res.status(400).send('User already exists');
 
     body.password = await bCrypt.hash(body.password, 10);
 
-    const newConsumer = consumerService.create(body);
+    const newConsumer = await consumerService.create(body);
     const {consumer_id} = newConsumer;
 
     const token = generateAuthToken(consumer_id);
@@ -65,7 +65,7 @@ const findOne = async (req, res) => {
     if (isNaN(+id) && !!id) res.status(400).send('Invalid value');
     if (!await consumerService.isExist(id)) return res.status(400).send('User does not exists');
 
-    const inDbUser = consumerService.findById(id);
+    const inDbUser = await consumerService.findById(id);
 
     res.status(200).send({
         consumer_id: inDbUser.consumer_id,
@@ -97,7 +97,7 @@ const getAllInfoFromMeters = async (req, res) => {
         const meters = response.rows;
         for (let j = 0; j < meters.length; j++) {
             const meter = meters[j];
-            const allMeterData = meterDataService.getFromOne(meter.meter_id);
+            const allMeterData = await meterDataService.getFromOne(meter.meter_id);
             meters[j].meterData = allMeterData.rows;
         }
         groups[i].meters = meters;
