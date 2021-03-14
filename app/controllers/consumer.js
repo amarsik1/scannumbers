@@ -1,4 +1,4 @@
-const {validateUser, generateAuthToken, getIdFromToken} = require('../models/consumer.model'),
+const { validateUser, generateAuthToken, getIdFromToken } = require('../models/consumer.model'),
     bCrypt = require('bcrypt');
 const consumerService = require('../service/consumer.service');
 const meterGroupService = require('../service/meterGroup.service');
@@ -6,10 +6,10 @@ const meterService = require('../service/meter.service');
 const meterDataService = require('../service/meterData.service');
 
 const create = async (req, res) => {
-    const {error} = validateUser(req.body);
+    const { error } = validateUser(req.body);
     if (error) return res.status(400).jsonp(error.details[0].message);
 
-    const {body} = req;
+    const { body } = req;
 
     const inDbUser = await consumerService.findByEmail(body.email)
     if (inDbUser) return res.status(400).send('User already exists');
@@ -17,7 +17,7 @@ const create = async (req, res) => {
     body.password = await bCrypt.hash(body.password, 10);
 
     const newConsumer = await consumerService.create(body);
-    const {consumer_id} = newConsumer;
+    const { consumer_id } = newConsumer;
 
     const token = generateAuthToken(consumer_id);
     res
@@ -33,10 +33,10 @@ const create = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
     if (!email || !password) return res.status(400).send('Empty password or email');
 
-    const DbUser = consumerService.findByEmail(email);
+    const DbUser = await consumerService.findByEmail(email);
     if (!DbUser) return res.status(400).send('User does not exists');
 
     const isPasswordCorrect = await bCrypt.compare(password, DbUser.password);
@@ -60,7 +60,7 @@ const login = async (req, res) => {
 
 const findOne = async (req, res) => {
 
-    const {id} = req.params;
+    const { id } = req.params;
 
     if (isNaN(+id) && !!id) res.status(400).send('Invalid value');
     if (!await consumerService.isExist(id)) return res.status(400).send('User does not exists');
@@ -77,7 +77,7 @@ const findOne = async (req, res) => {
 };
 
 const deleteOne = async (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
 
     if (!await consumerService.isExist(id)) return res.status(400).send('User does not exists');
 
@@ -107,7 +107,7 @@ const getAllInfoFromMeters = async (req, res) => {
 };
 
 const update = async (req, res) => {
-    const {error} = validateUser(req.body);
+    const { error } = validateUser(req.body);
     if (error) return res.status(400).jsonp(error.details[0].message);
 
     await consumerService.update(req.body);
