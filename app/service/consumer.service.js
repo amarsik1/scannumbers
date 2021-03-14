@@ -26,7 +26,7 @@ const deleteOne = async (id) => {
 
 const update = async (consumer) => {
     const {consumer_id, name, surname, patronymic} = consumer;
-    await pool.query("UPDATE meter SET name = $1, surname = $2, patronymic = $3 where consumer_id = $4",
+    await pool.query("UPDATE consumer SET name = $1, surname = $2, patronymic = $3 where consumer_id = $4",
         [name, surname, patronymic, consumer_id]);
 };
 

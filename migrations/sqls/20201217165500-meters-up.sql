@@ -58,11 +58,11 @@ create table meter (
   name varchar not null,
   resource_type_id integer not null,
   organization_id integer not null,
-  meters_group_id integer not null,
-    CONSTRAINT meter_unique UNIQUE (resource_type_id, organization_id, meters_group_id),
-    FOREIGN KEY (meters_group_id) REFERENCES meters_group (meters_group_id) ON DELETE CASCADE,
-    FOREIGN KEY (organization_id) REFERENCES organization (organization_id),
-    FOREIGN KEY (resource_type_id) REFERENCES resource_type (resource_type_id)
+  meters_group_id integer not null
+    -- CONSTRAINT meter_unique UNIQUE (resource_type_id, organization_id, meters_group_id),
+    -- FOREIGN KEY (meters_group_id) REFERENCES meters_group (meters_group_id) ON DELETE CASCADE,
+    -- FOREIGN KEY (organization_id) REFERENCES organization (organization_id),
+    -- FOREIGN KEY (resource_type_id) REFERENCES resource_type (resource_type_id)
 );
 
 create TABLE meter_data (

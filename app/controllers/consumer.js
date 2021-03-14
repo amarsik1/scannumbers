@@ -1,4 +1,4 @@
-const { validateUser, generateAuthToken, getIdFromToken } = require('../models/consumer.model'),
+const { validateUser, validateUpdateUser, generateAuthToken, getIdFromToken } = require('../models/consumer.model'),
     bCrypt = require('bcrypt');
 const consumerService = require('../service/consumer.service');
 const meterGroupService = require('../service/meterGroup.service');
@@ -79,6 +79,7 @@ const findOne = async (req, res) => {
 const deleteOne = async (req, res) => {
     const { id } = req.params;
 
+    if (isNaN(+id) && !!id) res.status(400).send('Invalid value');
     if (!await consumerService.isExist(id)) return res.status(400).send('User does not exists');
 
     await consumerService.deleteOne(id);
@@ -93,8 +94,7 @@ const getAllInfoFromMeters = async (req, res) => {
 
     for (let i = 0; i < groups.length; i++) {
         const group = groups[i];
-        const response = await meterService.getMetersByGroupId(group.meters_group_id);
-        const meters = response.rows;
+        const meters = await meterService.getMetersByGroupId(group.meters_group_id);
         for (let j = 0; j < meters.length; j++) {
             const meter = meters[j];
             const allMeterData = await meterDataService.getFromOne(meter.meter_id);
@@ -107,8 +107,10 @@ const getAllInfoFromMeters = async (req, res) => {
 };
 
 const update = async (req, res) => {
-    const { error } = validateUser(req.body);
+    const { error } = validateUpdateUser(req.body);
     if (error) return res.status(400).jsonp(error.details[0].message);
+
+    if (!await consumerService.isExist(req.body.id)) return res.status(400).send('User does not exists');
 
     await consumerService.update(req.body);
     res.status(200).send("Consumer info was successfully updated");

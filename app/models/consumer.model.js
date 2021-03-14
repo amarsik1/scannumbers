@@ -13,6 +13,16 @@ const validateUser = user => {
     return schema.validate(user);
 }
 
+const validateUpdateUser = user => {
+    const schema = Joi.object({
+        name: Joi.string().min(2).max(50).required(),
+        surname: Joi.string().min(2).max(50).required(),
+        patronymic: Joi.string().min(2).max(50).required(),
+        id: Joi.number().required(),
+    });
+    return schema.validate(user);
+}
+
 const generateAuthToken = id => {
     return jwt.sign(
         {
@@ -28,6 +38,7 @@ const getIdFromToken = token => {
 
 module.exports = {
     validateUser,
+    validateUpdateUser,
     generateAuthToken,
     getIdFromToken
 };
