@@ -1,10 +1,10 @@
 const {Pool} = require('pg');
 // heroku database
 const pool_heroku = new Pool({
-    user: 'exqjhahjxhxgpi',
-    password: 'c52b707e33087fb0c1646860c77b85f4734aeee4786702d703640f172fb0a6c3',
-    database: 'dcouv2s8q4a3eh',
-    host: 'ec2-52-44-139-108.compute-1.amazonaws.com',
+    user: 'huezrtdstrnpjb',
+    password: '3e671a9599d101cd9a2d3d2c0545edfe0e2aec3718da58be73758e4d7887a5e0',
+    database: 'de7gt9f6dtmh45',
+    host: 'ec2-54-205-183-19.compute-1.amazonaws.com',
     port: '5432'
 });
 //localhost
