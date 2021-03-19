@@ -5,7 +5,8 @@
     "database": "de7gt9f6dtmh45",
     "host": "ec2-54-205-183-19.compute-1.amazonaws.com",
     "driver": "pg",
-    "multipleStatements": true
+    "multipleStatements": true,
+    "ssl": true
   },
   "sql-file": true
 }
