@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 // heroku database
 const pool_heroku = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL2,
     ssl: {
         rejectUnauthorized: false
     }
