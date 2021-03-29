@@ -6,7 +6,10 @@
     "host": "ec2-54-205-183-19.compute-1.amazonaws.com",
     "port": "5432",
     "driver": "pg",
-    "multipleStatements": true
+    "multipleStatements": true,
+    "ssl": {
+      "rejectUnauthorized": false
+    }
   },
   "sql-file": true
 }
