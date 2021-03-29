@@ -6,7 +6,7 @@ function validateOrganization(organization) {
         name: Joi.string().min(1).max(255).required(),
         resource_type: Joi.string().required(),
         address_id: Joi.number().min(1).required(),
-        edrpou: Joi.number().min(1000000).max(9999999).required()
+        edrpou: Joi.string().required()
     });
     return schema.validate(organization);
 }

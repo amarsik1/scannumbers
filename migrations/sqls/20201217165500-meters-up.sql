@@ -13,7 +13,7 @@ create table organization (
   name varchar not null,
   resource_type varchar not null,
   address_id integer not null,
-  edrpou integer not null UNIQUE,
+  edrpou varchar not null UNIQUE,
   FOREIGN KEY (address_id) REFERENCES address (address_id)
 );
 
