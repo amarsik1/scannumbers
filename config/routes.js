@@ -23,7 +23,7 @@ module.exports = (app) => {
     app.get('/meters_group/:id', metersGroup.getMeters);
     app.delete('/meters_group/:id', metersGroup.deleteOne);
 
-    app.get('/organization', organization.getOrganizationByResourceId);
+    app.get('/organization', organization.getOrganizationByResource);
     app.post('/organization', organization.create);
     app.put('/organization', organization.update);
     app.get('/organization/:id', organization.getOne);

@@ -58,5 +58,5 @@ module.exports = {
     create,
     update,
     getOne,
-    getOrganizationByResourceId
+    getOrganizationByResource
 };
