@@ -37,7 +37,7 @@ const login = async (req, res) => {
     if (!email || !password) return res.status(400).send('Empty password or email');
 
     const DbUser = await consumerService.findByEmail(email);
-    if (!DbUser) return res.status(400).send('User does not exists');
+    if (!DbUser) return res.status(401).send('User does not exists');
 
     const isPasswordCorrect = await bCrypt.compare(password, DbUser.password);
     if (!isPasswordCorrect) {

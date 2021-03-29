@@ -1,35 +1,21 @@
-create table resource_type (
-  resource_type_id serial  PRIMARY KEY,
-  name varchar not null
-);
-
-create table street_type (
-  street_type_id serial PRIMARY KEY ,
-  name varchar not null
-);
-
 create table address (
   address_id serial PRIMARY KEY,
-  street_type_id integer not null ,
+  street_type varchar not null ,
   street_name varchar not null ,
   city varchar not null ,
   house_number varchar not null ,
   apartment_number varchar default 0,
-  CONSTRAINT address_unique UNIQUE (city, street_name, house_number, apartment_number),
-  FOREIGN KEY (street_type_id) REFERENCES street_type (street_type_id)
+  CONSTRAINT address_unique UNIQUE (city, street_name, house_number, apartment_number)
 );
-
 
 create table organization (
   organization_id serial PRIMARY KEY,
   name varchar not null,
-  resource_type_id integer not null,
+  resource_type varchar not null,
   address_id integer not null,
   edrpou integer not null UNIQUE,
-  FOREIGN KEY (address_id) REFERENCES address (address_id),
-  FOREIGN KEY (resource_type_id) REFERENCES resource_type (resource_type_id)
+  FOREIGN KEY (address_id) REFERENCES address (address_id)
 );
-
 
 create table consumer (
   consumer_id serial PRIMARY KEY,
@@ -56,13 +42,13 @@ create table meter (
   meter_id serial PRIMARY KEY,
   personal_account varchar not null,
   name varchar not null,
-  resource_type_id integer not null,
+  resource_type varchar not null,
   organization_id integer not null,
   meters_group_id integer not null
-    -- CONSTRAINT meter_unique UNIQUE (resource_type_id, organization_id, meters_group_id),
+    -- CONSTRAINT meter_unique UNIQUE (resource_type, organization_id, meters_group_id),
     -- FOREIGN KEY (meters_group_id) REFERENCES meters_group (meters_group_id) ON DELETE CASCADE,
     -- FOREIGN KEY (organization_id) REFERENCES organization (organization_id),
-    -- FOREIGN KEY (resource_type_id) REFERENCES resource_type (resource_type_id)
+    -- FOREIGN KEY (resource_type) REFERENCES resource_type (resource_type)
 );
 
 create TABLE meter_data (
@@ -72,14 +58,3 @@ create TABLE meter_data (
   date TIMESTAMP NOT NULL,
   FOREIGN KEY (meter_id) REFERENCES meter (meter_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
-
- insert into street_type (name) values
- ('square'),
- ('lane'),
- ('street');
-
- insert into resource_type (name) values
- ('gas'),
- ('electricity'),
- ('water'),
- ('heat');

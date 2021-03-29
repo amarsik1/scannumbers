@@ -1,12 +1,12 @@
-const {validateOrganization} = require('../models/organization.model');
+const { validateOrganization } = require('../models/organization.model');
 const addressService = require('../service/address.service');
 const organizationService = require('../service/organization.service');
 
 const create = async (req, res) => {
-    const {error} = validateOrganization(req.body);
+    const { error } = validateOrganization(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    const {address_id, edrpou} = req.body;
+    const { address_id, edrpou } = req.body;
 
     const organizationInDb = await organizationService.getOneByEDRPOU(edrpou);
     if (!!organizationInDb) return res.status(400).send('Organization with this edrpou already exists');
@@ -30,20 +30,20 @@ const getOne = async (req, res) => {
     res.status(200).send(organization);
 };
 
-const getOrganizationByResourceId = async (req, res) => {
-    const id = parseInt(req.query.resourceType);
+const getOrganizationByResource = async (req, res) => {
+    const resource = parseInt(req.query.resourceType);
 
-    if (id > 5 || id < 1) return res.status(400).send('Invalid value');
-    const organizations = await organizationService.getOrganizationByResourceId(id);
+    if (typeof resource === 'string') return res.status(400).send('Invalid value');
+    const organizations = await organizationService.getOrganizationByResource(resource);
 
     res.status(200).send(organizations);
 };
 
 const update = async (req, res) => {
-    const {error} = validateOrganization(req.body);
+    const { error } = validateOrganization(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    const {organization_id, address_id} = req.body;
+    const { organization_id, address_id } = req.body;
 
     if (await organizationService.isValueExist(req.body)) return res.status(400).send('Organization with this value already exists');
     if (!await organizationService.isExist(organization_id)) return res.status(400).send('Organization does not exists');

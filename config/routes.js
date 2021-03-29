@@ -11,23 +11,25 @@ module.exports = (app) => {
     app.get('/consumer/all', authMiddleware, consumer.getAllInfoFromMeters);
     app.get('/consumer/:id', consumer.findOne);
     app.delete('/consumer/:id', consumer.deleteOne);
+    app.put('/consumer', consumer.update);
 
     app.get('/address/:id', address.getOnce);
     app.post('/address', address.create);
-    app.put('/address/:id', address.update);
+    app.put('/address', address.update);
     app.delete('/address/:id', address.deleteOnce);
 
     app.post('/meters_group', metersGroup.create);
+    app.put('/meters_group', metersGroup.update);
     app.get('/meters_group/:id', metersGroup.getMeters);
-    app.put('/meters_group/:id', metersGroup.update);
     app.delete('/meters_group/:id', metersGroup.deleteOne);
 
+    app.get('/organization', organization.getOrganizationByResourceId);
     app.post('/organization', organization.create);
+    app.put('/organization', organization.update);
     app.get('/organization/:id', organization.getOne);
-    app.put('/organization/:id', organization.update);
 
     app.post('/meter', meter.create);
-    app.put('/meter/:id', meter.update);
+    app.put('/meter', meter.update);
     app.delete('/meter/:id', meter.deleteOne);
 
 };
