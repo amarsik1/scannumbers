@@ -1,4 +1,4 @@
-const {validateAddress} = require('../models/address.model');
+const {validateAddress, validateAddressCreate} = require('../models/address.model');
 const addressService = require('../service/address.service');
 
 const getOnce = async (req, res) => {
@@ -10,7 +10,7 @@ const getOnce = async (req, res) => {
 };
 
 const create = async (req, res) => {
-    const {error} = validateAddress(req.body);
+    const {error} = validateAddressCreate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
     if (await addressService.isValueExist(req.body)) return res.status(400).send('Address with this value already exists');

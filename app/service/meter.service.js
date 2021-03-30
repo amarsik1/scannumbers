@@ -2,7 +2,7 @@ const pool = require('../../config/db');
 
 const isExist = async (id) => {
     const allMeterData = await pool.query("SELECT * FROM meter where meter_id = $1", [id]);
-    return !!allMeterData.rows.length;
+    return allMeterData.rows[0];
 };
 
 const isValueExist = async (meter) => {

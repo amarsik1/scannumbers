@@ -10,6 +10,16 @@ function validateMetersGroup(meterGroup) {
     return schema.validate(meterGroup);
 }
 
+function validateMetersGroupCreate(meterGroup) {
+    const schema = Joi.object({
+        name: Joi.string().min(1).max(255).required(),
+        consumer_id: Joi.number().min(1).max(32767).required(),
+        address_id: Joi.number().min(1).required()
+    });
+    return schema.validate(meterGroup);
+}
+
 module.exports = {
-    validateMetersGroup
+    validateMetersGroup,
+    validateMetersGroupCreate
 };

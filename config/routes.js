@@ -1,4 +1,4 @@
-const {meterData, consumer, meter, address, metersGroup, organization} = require('../app/controllers/');
+const { meterData, consumer, meter, address, metersGroup, organization } = require('../app/controllers/');
 const authMiddleware = require('../middleware/auth');
 
 module.exports = (app) => {

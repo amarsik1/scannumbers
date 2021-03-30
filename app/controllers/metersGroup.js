@@ -1,4 +1,4 @@
-const { validateMetersGroup } = require('../models/metersGroup.model');
+const { validateMetersGroup, validateMetersGroupCreate } = require('../models/metersGroup.model');
 const consumerService = require('../service/consumer.service');
 const addressService = require('../service/address.service');
 const meterService = require('../service/meter.service');
@@ -13,7 +13,7 @@ const getMeters = async (req, res) => {
 };
 
 const create = async (req, res) => {
-    const { error } = validateMetersGroup(req.body);
+    const { error } = validateMetersGroupCreate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
     if (await meterGroupService.isValueExist(req.body)) return res.status(400).send('Meters group with this value already exists');

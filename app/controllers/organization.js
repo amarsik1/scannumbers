@@ -1,9 +1,9 @@
-const { validateOrganization } = require('../models/organization.model');
+const { validateOrganization, validateOrganizationCreate } = require('../models/organization.model');
 const addressService = require('../service/address.service');
 const organizationService = require('../service/organization.service');
 
 const create = async (req, res) => {
-    const { error } = validateOrganization(req.body);
+    const { error } = validateOrganizationCreate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
     const { address_id, edrpou } = req.body;

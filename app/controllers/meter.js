@@ -27,7 +27,7 @@ const update = async (req, res) => {
 
     if (!await metersGroupService.isExist(meters_group_id)) return res.status(400).send('Meter group does not exists');
     if (!await organizationService.isExist(organization_id)) return res.status(400).send('Organization does not exists');
-    if (!await meterService.isExist(meter_id)) return res.status(400).send('Meter does not exists');
+    if (!!!await meterService.isExist(meter_id)) return res.status(400).send('Meter does not exists');
 
     // const meterInDb = await meterService.isValueExist(req.body);
     // if (!!meterInDb.length)
@@ -41,7 +41,7 @@ const update = async (req, res) => {
 const deleteOne = async (req, res) => {
     const { id } = req.params;
 
-    if (!await meterService.isExist(id)) return res.status(400).send('Meter does not exists');
+    if (!!!await meterService.isExist(id)) return res.status(400).send('Meter does not exists');
     await meterService.deleteOne(id)
     res.status(200).send('Successfully deleted');
 
