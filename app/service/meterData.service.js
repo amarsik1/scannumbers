@@ -10,7 +10,13 @@ const getFromOne = async (id) => {
     return data.rows;
 };
 
+const getLastRowFromMeter = async (id) => {
+    const data = await pool.query("SELECT * FROM meter_data where meter_id = $1 ORDER BY date DESC LIMIT 1", [id]);
+    return data.rows[0];
+};
+
 module.exports = meterDataService = {
     create,
-    getFromOne
-}
+    getFromOne,
+    getLastRowFromMeter
+};
