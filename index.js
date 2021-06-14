@@ -9,7 +9,7 @@ app.use(cors());
 
 require('./config/routes')(app);
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
     res.send("express application");
 });
 

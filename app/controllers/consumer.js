@@ -12,7 +12,7 @@ const create = async (req, res) => {
     const { body } = req;
 
     const inDbUser = await consumerService.findByEmail(body.email)
-    if (inDbUser) return res.status(400).send('User already exists');
+    if (inDbUser) return res.status(400).send({ message: 'User already exists' });
 
     body.password = await bCrypt.hash(body.password, 10);
 
@@ -22,7 +22,7 @@ const create = async (req, res) => {
     const token = generateAuthToken(consumer_id);
     res
         .header("x-auth-token", token)
-        .status(200)
+        .status(201)
         .send({
             consumer_id: consumer_id,
             name: body.name,
@@ -34,14 +34,14 @@ const create = async (req, res) => {
 
 const login = async (req, res) => {
     const { email, password } = req.body;
-    if (!email || !password) return res.status(400).send('Empty password or email');
+    if (!email || !password) return res.status(400).send({ message: 'Empty password or email' });
 
     const DbUser = await consumerService.findByEmail(email);
-    if (!DbUser) return res.status(401).send('User does not exists');
+    if (!DbUser) return res.status(401).send({ message: 'User does not exists' });
 
     const isPasswordCorrect = await bCrypt.compare(password, DbUser.password);
     if (!isPasswordCorrect) {
-        return res.status(400).send('Wrong password');
+        return res.status(400).send({ message: 'Wrong password' });
     }
 
     const token = generateAuthToken(DbUser.consumer_id);
@@ -62,8 +62,8 @@ const findOne = async (req, res) => {
 
     const { id } = req.params;
 
-    if (isNaN(+id) && !!id) res.status(400).send('Invalid value');
-    if (!await consumerService.isExist(id)) return res.status(400).send('User does not exists');
+    if (isNaN(+id) && !!id) res.status(400).send({ message: 'Invalid value' });
+    if (!await consumerService.isExist(id)) return res.status(400).send({ message: 'User does not exists' });
 
     const inDbUser = await consumerService.findById(id);
 
@@ -79,11 +79,11 @@ const findOne = async (req, res) => {
 const deleteOne = async (req, res) => {
     const { id } = req.params;
 
-    if (isNaN(+id) && !!id) res.status(400).send('Invalid value');
-    if (!await consumerService.isExist(id)) return res.status(400).send('User does not exists');
+    if (isNaN(+id) && !!id) res.status(400).send({ message: 'Invalid value' });
+    if (!await consumerService.isExist(id)) return res.status(400).send({ message: 'User does not exists' });
 
     await consumerService.deleteOne(id);
-    res.status(200).send('Successfully deleted');
+    res.status(200).send({ message: 'Successfully deleted' });
 };
 
 const getAllInfoFromMeters = async (req, res) => {
@@ -110,10 +110,10 @@ const update = async (req, res) => {
     const { error } = validateUpdateUser(req.body);
     if (error) return res.status(400).jsonp(error.details[0].message);
 
-    if (!await consumerService.isExist(req.body.id)) return res.status(400).send('User does not exists');
+    if (!await consumerService.isExist(req.body.id)) return res.status(400).send({ message: 'User does not exists' });
 
     await consumerService.update(req.body);
-    res.status(200).send("Consumer info was successfully updated");
+    res.status(200).send({ message: "Consumer info was successfully updated" });
 };
 
 module.exports = {
