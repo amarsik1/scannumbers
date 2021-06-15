@@ -6,9 +6,10 @@ const create = async (req, res) => {
     const { value, meter_id } = req.body;
     const innerMeter = await meterService.isExist(meter_id);
     if (!innerMeter) return res.status(400).send({ message: 'Meter is not exist' });
-    const { value: prevValue } = await meterDataService.getLastRowFromMeter(meter_id);
+    const latestRow = await meterDataService.getLastRowFromMeter(meter_id);
     const date = new Date();
-    if (prevValue) {
+    if (latestRow) {
+        const { value: prevValue } = latestRow;
         if (prevValue > value) return res.status(400).send({ message: 'The value cannot be less than the previous' });
         if ((value - prevValue) > difference[innerMeter.resource_type]) return res.status(400).send({ message: 'Value is much higher than the previous' });
     }

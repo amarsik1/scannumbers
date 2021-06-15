@@ -10,7 +10,7 @@ app.use(cors());
 require('./config/routes')(app);
 
 app.get('/', (_, res) => {
-    res.send("express application");
+    res.send("express application by Melnyk Artem");
 });
 
 app.listen(PORT, () => {
